@@ -124,7 +124,7 @@ Click Apply & Restart
 
 Copy the template file:
 
-    - cp .env.template .env
+    - touch .env
 
     -Edit `.env` and fill your credentials.
 
