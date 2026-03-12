@@ -122,7 +122,7 @@ Click Apply & Restart
 
 # Step 5 — Create Environment Variables
 
-Copy the template file:
+Create file:
 
     - touch .env
 
