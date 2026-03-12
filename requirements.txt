@@ -1,0 +1,7 @@
+kafka-python==2.0.2
+psycopg2-binary==2.9.6 # to connect to PostgreSQL (and TimescaleDB)
+pandas==2.0.3
+python-dotenv==1.0.0 # Loads .env variables into Python scripts.
+scikit-learn==1.3.0
+pre-commit==3.3.3 # Git tool to run checks before committing code.
+requests==2.31.0 # HTTP library to call external APIs.
