@@ -9,15 +9,20 @@ The system collects traffic data from the **TomTom API**, streams it through **K
 # Project Architecture
 
 TomTom API
+
     ↓
 Kafka Producer
+
     ↓
 Kafka Topic
     ↓
+
 Kafka Consumer
     ↓
+
 TimescaleDB (PostgreSQL extension for time-series data)
     ↓
+    
 Power BI / Alerts / Airflow
 
 
@@ -112,10 +117,13 @@ If you see:
 
 Open Docker Desktop.
     ↓
+
 Go to: Settings → Resources → WSL Integration
     ↓
+
 Enable the following distribution: Ubuntu-22.04
     ↓
+    
 Click Apply & Restart
 
 -------------------------------------------------------------------------------

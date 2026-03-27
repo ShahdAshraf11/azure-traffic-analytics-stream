@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 consumer = KafkaConsumer(
-    "test-topic",
+    "traffic-data",
     bootstrap_servers=os.getenv("KAFKA_BOOTSTRAP_SERVERS"),
     auto_offset_reset="earliest",
     value_deserializer=lambda m: json.loads(m.decode("utf-8")),

@@ -6,6 +6,24 @@ __pycache__/
 *.pyc
 .DS_Store
 
+# Docker volumes (if any)
+data/
+
+# Model files
+*.joblib
+
 # IDE
 .vscode/
 .idea/
+
+# API keys (if stored elsewhere)
+api_config/
+
+PROJECT_DOCUMENTATION.md
+README.md
+traffic_eda_guide.md
+view_data.py
+bridge_validation_script.py
+
+notebooks/
+.TomTom_Traffic_EDA_RealAPI (4).ipynb
