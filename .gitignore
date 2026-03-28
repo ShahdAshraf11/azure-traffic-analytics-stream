@@ -27,3 +27,11 @@ bridge_validation_script.py
 
 notebooks/
 .TomTom_Traffic_EDA_RealAPI (4).ipynb
+
+logs/
+docs/Proposal/Shahd Ashraf Zaki (shahdashraff896@gmail.com).pdf
+notebooks/TomTom_Traffic_EDA_RealAPI (4).ipynb
+Scripts/bridge_validation_script.py
+raw_events_202603281922.csv
+.pre-commit-config.yaml
+.gitignore

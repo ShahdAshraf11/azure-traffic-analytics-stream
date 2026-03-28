@@ -22,7 +22,7 @@ Kafka Consumer
 
 TimescaleDB (PostgreSQL extension for time-series data)
     ↓
-    
+
 Power BI / Alerts / Airflow
 
 
@@ -123,7 +123,7 @@ Go to: Settings → Resources → WSL Integration
 
 Enable the following distribution: Ubuntu-22.04
     ↓
-    
+
 Click Apply & Restart
 
 -------------------------------------------------------------------------------
@@ -403,3 +403,6 @@ Restart containers:
     command : git pull
 
 * Run pre-commit install after cloning to enable automatic code formatting and linting.
+
+
+# done phase 1 with classes but there is a problem that kafdrop and Python script have an issue with Advertised Listeners so we need to fix that

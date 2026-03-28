@@ -5,3 +5,7 @@ python-dotenv==1.0.0 # Loads .env variables into Python scripts.
 scikit-learn==1.3.0
 pre-commit==3.3.3 # Git tool to run checks before committing code.
 requests==2.31.0 # HTTP library to call external APIs.
+
+# Time-based job scheduling  replaces the manual time.sleep() loop
+
+APScheduler==3.10.4
