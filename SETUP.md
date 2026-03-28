@@ -130,9 +130,9 @@ Click Apply & Restart
 
 # Step 5 — Create Environment Variables
 
-Copy the template file:
+Create file:
 
-    - cp .env.template .env
+    - touch .env
 
     -Edit `.env` and fill your credentials.
 
