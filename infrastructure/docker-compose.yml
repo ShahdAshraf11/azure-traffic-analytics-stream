@@ -13,8 +13,8 @@ services:
     depends_on:
       - zookeeper
     ports:
-      - "9092:9092"   # internal — for Docker containers
-      - "9093:9093"   # external — for your Python script
+      - "9092:9092"   # internalfor Docker containers
+      - "9093:9093"   # external for your Python script
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
