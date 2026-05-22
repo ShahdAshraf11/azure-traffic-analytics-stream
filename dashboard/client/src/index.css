@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222 47% 11%;
+    --foreground: 220 13% 91%;
+
+    --card: 222 47% 15%;
+    --card-foreground: 220 13% 91%;
+
+    --popover: 222 47% 15%;
+    --popover-foreground: 220 13% 91%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 220 13% 91%;
+
+    --muted: 217 33% 17%;
+    --muted-foreground: 218 11% 65%;
+
+    --accent: 217 33% 22%;
+    --accent-foreground: 220 13% 91%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 217 33% 22%;
+    --input: 217 33% 22%;
+    --ring: 217 91% 60%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 222 47% 11%;
+    --sidebar-foreground: 220 13% 91%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 217 33% 17%;
+    --sidebar-accent-foreground: 220 13% 91%;
+    --sidebar-border: 217 33% 22%;
+    --sidebar-ring: 217 91% 60%;
+
+    /* Traffic status colors */
+    --traffic-free: 142 71% 45%;
+    --traffic-moderate: 48 96% 53%;
+    --traffic-heavy: 25 95% 53%;
+    --traffic-severe: 0 84% 60%;
+    --traffic-closed: 220 9% 46%;
+
+    /* Chart colors */
+    --chart-1: 217 91% 60%;
+    --chart-2: 142 71% 45%;
+    --chart-3: 48 96% 53%;
+    --chart-4: 25 95% 53%;
+    --chart-5: 0 84% 60%;
+
+    /* Surface levels */
+    --surface-0: 222 47% 11%;
+    --surface-1: 217 33% 17%;
+    --surface-2: 220 40% 13%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+/* Leaflet overrides */
+.leaflet-container {
+  background: hsl(222, 47%, 11%) !important;
+  border-radius: 0.75rem;
+}
+.leaflet-tile-pane {
+  filter: brightness(0.7) contrast(1.1) saturate(0.8);
+}
+.leaflet-control-zoom a {
+  background: hsl(217, 33%, 17%) !important;
+  color: hsl(220, 13%, 91%) !important;
+  border-color: hsl(217, 33%, 22%) !important;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(222, 47%, 11%);
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(217, 33%, 22%);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(217, 33%, 30%);
+}
+
+/* Anomaly pulse */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+.animate-pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* ─── Leaflet Dark Popup Override ─── */
+.leaflet-popup-content-wrapper {
+  background: #111a2e !important;
+  color: #c5cee0 !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(56,189,248,0.1) !important;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5) !important;
+  padding: 0 !important;
+}
+.leaflet-popup-content {
+  margin: 0 !important;
+  width: auto !important;
+}
+.leaflet-popup-tip {
+  background: #111a2e !important;
+  border: none !important;
+}
+.leaflet-popup-close-button {
+  color: #6b7a99 !important;
+  font-size: 18px !important;
+  padding: 8px 10px !important;
+}
+.leaflet-popup-close-button:hover {
+  color: #f0f4fc !important;
+}

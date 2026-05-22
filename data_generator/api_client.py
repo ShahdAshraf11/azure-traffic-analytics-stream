@@ -11,7 +11,7 @@ import logging
 
 # datetime lets us get the current date and time to record when each piece of data was fetched.
 from datetime import datetime, timezone
-from config import TOMTOM_API_KEY, TOMTOM_BASE_URL, MAX_RETRIES, RETRY_BACKOFF
+from config import TOMTOM_API_KEY, TOMTOM_BASE_URL,OPENWEATHER_API_KEY, OPENWEATHER_BASE_URL, MAX_RETRIES, RETRY_BACKOFF, CAIRO_BBOX, TOMTOM_INCIDENTS_URL, INCIDENT_CATEGORIES, DELAY_MAGNITUDE
 
 # creates a logger for this file named 'api_client' so log messages are clearly labelled with their source.
 logger = logging.getLogger(__name__)
@@ -62,7 +62,7 @@ def fetch_traffic_data(lat, lon):
             raw_data = response.json()
 
             # 2- reshape the data.
-            clean_record = _parse_response(raw_data, lat, lon)
+            clean_record = _parse_traffic_response(raw_data, lat, lon)
 
             # Log what we got so we can see it in the terminal
             logger.info(
@@ -97,7 +97,7 @@ def fetch_traffic_data(lat, lon):
     )
     return None
 
-def _parse_response(raw_data, lat, lon):
+def _parse_traffic_response(raw_data, lat, lon):
     '''
     takes messy TomTom JSON (camelCase) and returns a
     dict with snake_case fields matching our database columns.
@@ -121,3 +121,197 @@ def _parse_response(raw_data, lat, lon):
         # Save the entire original API response as raw json in the 'raw_payload' column so we never lose data
         "raw_payload": raw_data,
     }
+
+
+def fetch_weather_data(lat, lon):
+    """
+    Calls OpenWeatherMap once per round for Cairo
+    Returns a clean parsed dict ready to insert into weather_events or None on failure
+    """
+    if not OPENWEATHER_API_KEY:
+        logger.error("OPENWEATHER_API_KEY is missing from .env — skipping weather fetch")
+        return None
+
+    params = {
+        "lat":   lat,
+        "lon":   lon,
+        "appid": OPENWEATHER_API_KEY,
+        "units": "metric",
+    }
+ # Try up to 2 times (1 original + 1 retry)
+    for attempt in range(1, 3):
+        try:
+            logger.info("Calling OpenWeather API for Cairo...")
+            response = requests.get(OPENWEATHER_BASE_URL, params=params, timeout=10)
+
+            if response.status_code == 401:
+                logger.error("HTTP 401: Your OPENWEATHER_API_KEY is wrong or not activated yet")
+                return None
+
+            if response.status_code == 429:
+                logger.warning("Weather API: rate limited (429). Waiting 5s before retry...")
+                time.sleep(5)
+                continue
+
+            if response.status_code != 200:
+                logger.warning(f"OpenWeather returned HTTP {response.status_code} retrying...")
+                time.sleep(RETRY_BACKOFF)
+                continue
+            
+            raw_data = response.json()
+
+            clean_record = _parse_weather_response(raw_data)
+
+            logger.info(
+                f"  Weather: {clean_record['weather_main']} | "
+                f"temp={clean_record['temperature']}°C | "
+                f"rain={clean_record['rain_mm']} mm"
+            )
+            return clean_record
+
+        except requests.exceptions.ConnectionError:
+            logger.error(f"Weather API: connection error (attempt {attempt}/2)")
+            time.sleep(RETRY_BACKOFF)
+ 
+        except requests.exceptions.Timeout:
+            logger.warning(f"Weather API: request timed out (attempt {attempt}/2)")
+            time.sleep(RETRY_BACKOFF)
+ 
+        except Exception as e:
+            logger.error(f"Weather API: unexpected error: {e} (attempt {attempt}/2)")
+            time.sleep(RETRY_BACKOFF)
+    
+    logger.error("Weather API: all attempts failed — skipping this round")
+    return None
+
+def _parse_weather_response(raw_data):
+    """
+    Takes the raw OpenWeather JSON and returns a clean
+    dict with snake_case fields matching our weather_events columns
+    """
+    return {
+        "recorded_at":   datetime.now(timezone.utc).isoformat(),
+        "temperature":   raw_data["main"]["temp"],
+        "feels_like":    raw_data["main"]["feels_like"],
+        "humidity":      raw_data["main"]["humidity"],          # in percent
+        "weather_main":  raw_data["weather"][0]["main"],        # "Rain", "Clear", "Clouds"
+        "weather_desc":  raw_data["weather"][0]["description"], # "light rain"
+        "wind_speed":    raw_data["wind"]["speed"],             # m/s
+        "rain_mm":       raw_data.get("rain", {}).get("1h", 0.0),  # 0.0 if no rain key
+        "raw_payload":   raw_data,
+    }
+
+
+def fetch_incidents_data():
+    """
+    Fetches ALL active traffic incidents in the Cairo bounding box.
+    One API call per round — returns a list of parsed incident dicts.
+    """
+    params = {
+        "key": TOMTOM_API_KEY,
+        "bbox": CAIRO_BBOX,
+        "fields": (
+            "{incidents{type,geometry{type,coordinates},"
+            "properties{id,iconCategory,magnitudeOfDelay,"
+            "events{description,code},startTime,endTime,"
+            "from,to,length,delay,roadNumbers}}}"
+        ),
+        "language": "en-US",
+        "categoryFilter": "0,1,2,3,4,5,6,7,8,9,10,11,14",
+        "timeValidityFilter": "present",
+    }
+
+    for attempt in range(1, 3):  # 2 attempts max
+        try:
+            logger.info("Calling TomTom Incidents API for Cairo bounding box...")
+            response = requests.get(TOMTOM_INCIDENTS_URL, params=params, timeout=15)
+
+            if response.status_code == 403:
+                logger.error("HTTP 403: TomTom API key invalid for Incidents endpoint")
+                return []
+
+            if response.status_code == 429:
+                logger.warning("Incidents API: rate limited (429). Waiting 5s...")
+                time.sleep(5)
+                continue
+
+            if response.status_code != 200:
+                logger.warning(f"Incidents API: HTTP {response.status_code}. Retrying...")
+                time.sleep(RETRY_BACKOFF)
+                continue
+
+            raw_data = response.json()
+            incidents = raw_data.get("incidents", [])
+
+            parsed = _parse_incidents(incidents)
+            logger.info(f"  Incidents: {len(parsed)} active incidents found in Cairo")
+            return parsed
+
+        except requests.exceptions.ConnectionError:
+            logger.error(f"Incidents API: connection error (attempt {attempt}/2)")
+            time.sleep(RETRY_BACKOFF)
+
+        except requests.exceptions.Timeout:
+            logger.warning(f"Incidents API: timed out (attempt {attempt}/2)")
+            time.sleep(RETRY_BACKOFF)
+
+        except Exception as e:
+            logger.error(f"Incidents API: unexpected error: {e} (attempt {attempt}/2)")
+            time.sleep(RETRY_BACKOFF)
+
+    logger.error("Incidents API: all attempts failed — skipping this round")
+    return []
+
+
+def _parse_incidents(incidents_list):
+    """
+    Converts TomTom incident GeoJSON features into flat dicts
+    for database insertion.
+    """
+    parsed = []
+    now = datetime.now(timezone.utc).isoformat()
+
+    for feature in incidents_list:
+        props = feature.get("properties", {})
+        geom = feature.get("geometry", {})
+
+        # Get the center point of the incident geometry
+        coords = geom.get("coordinates", [])
+        if coords and len(coords) > 0:
+            # For LineString, take the midpoint
+            if geom.get("type") == "LineString" and len(coords) > 1:
+                mid = len(coords) // 2
+                lon, lat = coords[mid][0], coords[mid][1]
+            else:
+                # Single point or first coordinate
+                first = coords[0] if isinstance(coords[0], list) else coords
+                lon, lat = first[0], first[1]
+        else:
+            lat, lon = None, None
+
+        # Get event descriptions
+        events = props.get("events", [])
+        description = "; ".join([e.get("description", "") for e in events if e.get("description")])
+
+        icon_cat = props.get("iconCategory", 0)
+
+        parsed.append({
+            "fetched_at": now,
+            "incident_id": props.get("id", ""),
+            "incident_type": INCIDENT_CATEGORIES.get(icon_cat, "Unknown"),
+            "icon_category": icon_cat,
+            "magnitude": DELAY_MAGNITUDE.get(props.get("magnitudeOfDelay", 0), "Unknown"),
+            "description": description or "No description",
+            "road_from": props.get("from", ""),
+            "road_to": props.get("to", ""),
+            "road_numbers": ", ".join(props.get("roadNumbers", [])),
+            "delay_seconds": props.get("delay", 0),
+            "length_meters": props.get("length", 0),
+            "lat": lat,
+            "lon": lon,
+            "start_time": props.get("startTime"),
+            "end_time": props.get("endTime"),
+            "raw_geometry": geom,
+        })
+
+    return parsed

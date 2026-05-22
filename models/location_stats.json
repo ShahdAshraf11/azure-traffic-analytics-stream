@@ -1,0 +1,344 @@
+{
+  "city_wide": {
+    "avg_speed": 21.99794741248097,
+    "avg_free_flow_speed": 32.52435898021309,
+    "avg_congestion_ratio": 0.6509753798325725,
+    "avg_delay_seconds": 234.7257389649924,
+    "sample_count": 1314000
+  },
+  "districts": {
+    "Downtown Cairo": {
+      "avg_speed": 14.148283866057838,
+      "avg_free_flow_speed": 23.30057974559687,
+      "avg_congestion_ratio": 0.5980677503261579,
+      "avg_delay_seconds": 250.67142857142858,
+      "sample_count": 367920
+    },
+    "Giza": {
+      "avg_speed": 33.446424403855914,
+      "avg_free_flow_speed": 47.66829211060375,
+      "avg_congestion_ratio": 0.6694292189878235,
+      "avg_delay_seconds": 229.8783295281583,
+      "sample_count": 315360
+    },
+    "Heliopolis": {
+      "avg_speed": 20.696082572298327,
+      "avg_free_flow_speed": 29.70181697108067,
+      "avg_congestion_ratio": 0.6967707838660578,
+      "avg_delay_seconds": 133.85555555555555,
+      "sample_count": 52560
+    },
+    "Maadi": {
+      "avg_speed": 31.73445300608828,
+      "avg_free_flow_speed": 42.94779109589041,
+      "avg_congestion_ratio": 0.7362147640791475,
+      "avg_delay_seconds": 92.12859589041096,
+      "sample_count": 105120
+    },
+    "Manial": {
+      "avg_speed": 10.52939450152207,
+      "avg_free_flow_speed": 17.123740011415524,
+      "avg_congestion_ratio": 0.62562994054414,
+      "avg_delay_seconds": 424.26401731354645,
+      "sample_count": 210240
+    },
+    "Nasr City": {
+      "avg_speed": 37.33859779299848,
+      "avg_free_flow_speed": 53.00003710045662,
+      "avg_congestion_ratio": 0.7032265962709284,
+      "avg_delay_seconds": 86.55347222222223,
+      "sample_count": 105120
+    },
+    "Old Cairo": {
+      "avg_speed": 17.183697678843227,
+      "avg_free_flow_speed": 24.95206716133942,
+      "avg_congestion_ratio": 0.6860485093226788,
+      "avg_delay_seconds": 170.8205194063927,
+      "sample_count": 105120
+    },
+    "Shobra": {
+      "avg_speed": 14.904994292237443,
+      "avg_free_flow_speed": 23.998595890410957,
+      "avg_congestion_ratio": 0.6210646442161339,
+      "avg_delay_seconds": 204.25669710806696,
+      "sample_count": 52560
+    }
+  },
+  "locations": {
+    "26th of July Corridor": {
+      "avg_speed": 60.28873097412481,
+      "avg_free_flow_speed": 78.90715182648401,
+      "avg_congestion_ratio": 0.7639920167427702,
+      "avg_delay_seconds": 56.608485540334854,
+      "district": "Giza",
+      "lat": 30.063321,
+      "lon": 31.167581,
+      "frc": "FRC0",
+      "sample_count": 52560
+    },
+    "Abdulaziz Al Saud St": {
+      "avg_speed": 10.982039573820396,
+      "avg_free_flow_speed": 16.998167808219176,
+      "avg_congestion_ratio": 0.6460407819634704,
+      "avg_delay_seconds": 257.0794520547945,
+      "district": "Manial",
+      "lat": 30.023352,
+      "lon": 31.223223,
+      "frc": "FRC4",
+      "sample_count": 52560
+    },
+    "Ahmed Oraby St": {
+      "avg_speed": 30.807235540334855,
+      "avg_free_flow_speed": 42.89877283105023,
+      "avg_congestion_ratio": 0.7181280821917808,
+      "avg_delay_seconds": 93.7431506849315,
+      "district": "Giza",
+      "lat": 30.062267,
+      "lon": 31.212831,
+      "frc": "FRC2",
+      "sample_count": 52560
+    },
+    "Al Malik Al Mozafar St": {
+      "avg_speed": 9.502454337899543,
+      "avg_free_flow_speed": 14.396683789954338,
+      "avg_congestion_ratio": 0.6600541799847792,
+      "avg_delay_seconds": 284.0576864535769,
+      "district": "Manial",
+      "lat": 30.014387,
+      "lon": 31.223665,
+      "frc": "FRC4",
+      "sample_count": 52560
+    },
+    "Al Manial St": {
+      "avg_speed": 9.322161339421614,
+      "avg_free_flow_speed": 14.0983599695586,
+      "avg_congestion_ratio": 0.6611176312785388,
+      "avg_delay_seconds": 288.44187595129375,
+      "district": "Manial",
+      "lat": 30.012794,
+      "lon": 31.224867,
+      "frc": "FRC4",
+      "sample_count": 52560
+    },
+    "Amro Ibn Al Aas St": {
+      "avg_speed": 12.762345890410959,
+      "avg_free_flow_speed": 18.89972602739726,
+      "avg_congestion_ratio": 0.6752591837899543,
+      "avg_delay_seconds": 211.8132610350076,
+      "district": "Old Cairo",
+      "lat": 30.013521,
+      "lon": 31.229385,
+      "frc": "FRC4",
+      "sample_count": 52560
+    },
+    "Autostorad St": {
+      "avg_speed": 37.64023401826484,
+      "avg_free_flow_speed": 50.00084474885845,
+      "avg_congestion_ratio": 0.7527949562404871,
+      "avg_delay_seconds": 76.41388888888889,
+      "district": "Maadi",
+      "lat": 29.997227,
+      "lon": 31.278652,
+      "frc": "FRC1",
+      "sample_count": 52560
+    },
+    "El Haram St": {
+      "avg_speed": 13.490228310502284,
+      "avg_free_flow_speed": 26.69889269406393,
+      "avg_congestion_ratio": 0.5052652949010654,
+      "avg_delay_seconds": 872.5650494672755,
+      "district": "Giza",
+      "lat": 30.015433,
+      "lon": 31.214553,
+      "frc": "FRC1",
+      "sample_count": 52560
+    },
+    "El-Gaish St": {
+      "avg_speed": 9.028542617960426,
+      "avg_free_flow_speed": 16.805681126331812,
+      "avg_congestion_ratio": 0.537246008371385,
+      "avg_delay_seconds": 368.19596651445966,
+      "district": "Downtown Cairo",
+      "lat": 30.052268,
+      "lon": 31.254252,
+      "frc": "FRC5",
+      "sample_count": 52560
+    },
+    "El-Gomhoreya St": {
+      "avg_speed": 11.668285768645358,
+      "avg_free_flow_speed": 18.80087709284627,
+      "avg_congestion_ratio": 0.6206318721461187,
+      "avg_delay_seconds": 254.44642313546424,
+      "district": "Downtown Cairo",
+      "lat": 30.0499,
+      "lon": 31.2466,
+      "frc": "FRC4",
+      "sample_count": 52560
+    },
+    "El-Qobba Bridge": {
+      "avg_speed": 20.696082572298327,
+      "avg_free_flow_speed": 29.70181697108067,
+      "avg_congestion_ratio": 0.6967707838660578,
+      "avg_delay_seconds": 133.85555555555555,
+      "district": "Heliopolis",
+      "lat": 30.100566,
+      "lon": 31.305483,
+      "frc": "FRC4",
+      "sample_count": 52560
+    },
+    "El-Rawda St": {
+      "avg_speed": 12.310922754946727,
+      "avg_free_flow_speed": 23.001748477929983,
+      "avg_congestion_ratio": 0.5353071689497717,
+      "avg_delay_seconds": 867.4770547945205,
+      "district": "Manial",
+      "lat": 30.015822,
+      "lon": 31.22392,
+      "frc": "FRC1",
+      "sample_count": 52560
+    },
+    "Gamal Abd El-Nasser Rd": {
+      "avg_speed": 24.00498668188737,
+      "avg_free_flow_speed": 38.69871955859969,
+      "avg_congestion_ratio": 0.6203026255707762,
+      "avg_delay_seconds": 135.58015601217656,
+      "district": "Giza",
+      "lat": 30.051973,
+      "lon": 31.216775,
+      "frc": "FRC2",
+      "sample_count": 52560
+    },
+    "King Faisal St": {
+      "avg_speed": 18.555542237442925,
+      "avg_free_flow_speed": 28.803398021308983,
+      "avg_congestion_ratio": 0.6442014516742771,
+      "avg_delay_seconds": 162.72614155251142,
+      "district": "Giza",
+      "lat": 30.004008,
+      "lon": 31.174183,
+      "frc": "FRC3",
+      "sample_count": 52560
+    },
+    "Maadi Corniche": {
+      "avg_speed": 25.82867199391172,
+      "avg_free_flow_speed": 35.89473744292237,
+      "avg_congestion_ratio": 0.7196345719178082,
+      "avg_delay_seconds": 107.84330289193304,
+      "district": "Maadi",
+      "lat": 29.957459,
+      "lon": 31.250348,
+      "frc": "FRC2",
+      "sample_count": 52560
+    },
+    "Magra El-Eyoun St": {
+      "avg_speed": 21.605049467275492,
+      "avg_free_flow_speed": 31.004408295281582,
+      "avg_congestion_ratio": 0.6968378348554034,
+      "avg_delay_seconds": 129.82777777777778,
+      "district": "Old Cairo",
+      "lat": 30.020851,
+      "lon": 31.240715,
+      "frc": "FRC4",
+      "sample_count": 52560
+    },
+    "Nasr City Ring Road": {
+      "avg_speed": 34.157699771689494,
+      "avg_free_flow_speed": 50.70076103500761,
+      "avg_congestion_ratio": 0.6737120757229833,
+      "avg_delay_seconds": 96.65886605783867,
+      "district": "Nasr City",
+      "lat": 30.0626,
+      "lon": 31.3417,
+      "frc": "FRC1",
+      "sample_count": 52560
+    },
+    "Nile Corniche": {
+      "avg_speed": 23.567233637747336,
+      "avg_free_flow_speed": 33.89815258751902,
+      "avg_congestion_ratio": 0.6952410863774734,
+      "avg_delay_seconds": 123.02009132420092,
+      "district": "Downtown Cairo",
+      "lat": 30.047107,
+      "lon": 31.231616,
+      "frc": "FRC1",
+      "sample_count": 52560
+    },
+    "October Bridge": {
+      "avg_speed": 15.514533866057839,
+      "avg_free_flow_speed": 26.000268264840184,
+      "avg_congestion_ratio": 0.5967186872146119,
+      "avg_delay_seconds": 206.2769406392694,
+      "district": "Downtown Cairo",
+      "lat": 30.0603,
+      "lon": 31.2446,
+      "frc": "FRC3",
+      "sample_count": 52560
+    },
+    "Ramses St": {
+      "avg_speed": 17.837195585996955,
+      "avg_free_flow_speed": 30.80306316590563,
+      "avg_congestion_ratio": 0.5790916685692542,
+      "avg_delay_seconds": 190.15715372907152,
+      "district": "Downtown Cairo",
+      "lat": 30.052613,
+      "lon": 31.237925,
+      "frc": "FRC3",
+      "sample_count": 52560
+    },
+    "Ring Road": {
+      "avg_speed": 53.53182267884323,
+      "avg_free_flow_speed": 70.00281773211567,
+      "avg_congestion_ratio": 0.764685842846271,
+      "avg_delay_seconds": 58.04699391171994,
+      "district": "Giza",
+      "lat": 29.999456,
+      "lon": 31.119034,
+      "frc": "FRC0",
+      "sample_count": 52560
+    },
+    "Salah Salem Road": {
+      "avg_speed": 40.51949581430746,
+      "avg_free_flow_speed": 55.29931316590563,
+      "avg_congestion_ratio": 0.7327411168188737,
+      "avg_delay_seconds": 76.44807838660579,
+      "district": "Nasr City",
+      "lat": 30.0396,
+      "lon": 31.2657,
+      "frc": "FRC2",
+      "sample_count": 52560
+    },
+    "Shobra St": {
+      "avg_speed": 14.904994292237443,
+      "avg_free_flow_speed": 23.998595890410957,
+      "avg_congestion_ratio": 0.6210646442161339,
+      "avg_delay_seconds": 204.25669710806696,
+      "district": "Shobra",
+      "lat": 30.092088,
+      "lon": 31.245208,
+      "frc": "FRC3",
+      "sample_count": 52560
+    },
+    "Tahrir Square": {
+      "avg_speed": 12.342437214611872,
+      "avg_free_flow_speed": 19.9011396499239,
+      "avg_congestion_ratio": 0.6201881582952816,
+      "avg_delay_seconds": 242.67180365296804,
+      "district": "Downtown Cairo",
+      "lat": 30.0444,
+      "lon": 31.2357,
+      "frc": "FRC4",
+      "sample_count": 52560
+    },
+    "Talaat Harb St": {
+      "avg_speed": 9.079758371385083,
+      "avg_free_flow_speed": 16.89487633181126,
+      "avg_congestion_ratio": 0.5373567713089802,
+      "avg_delay_seconds": 369.9316210045662,
+      "district": "Downtown Cairo",
+      "lat": 30.0506,
+      "lon": 31.2404,
+      "frc": "FRC4",
+      "sample_count": 52560
+    }
+  }
+}

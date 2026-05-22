@@ -1,5 +1,7 @@
 
 services:
+
+  #  STREAMING LAYER — Zookeeper + Kafka + Kafdrop
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.0
     environment:
@@ -7,6 +9,8 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
+    networks:
+      - traffic-net
 
   kafka:
     image: confluentinc/cp-kafka:7.4.0
@@ -14,7 +18,7 @@ services:
       - zookeeper
     ports:
       - "9092:9092"   # internal — for Docker containers
-      - "9093:9093"   # external — for your Python script
+      - "9093:9093"   # external — for your Python script on host
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -30,16 +34,26 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - traffic-net
+
   kafdrop:
     image: obsidiandynamics/kafdrop:latest
     depends_on:
       - kafka
     ports:
-      - "9000:9000"
+      - "9001:9000"
     environment:
       KAFKA_BROKERCONNECT: kafka:9092
+    networks:
+      - traffic-net
+
+
+  #  DATABASE LAYER — main traffic database (TimescaleDB)
+
   postgres:
     image: timescale/timescaledb:latest-pg14
+    container_name: infrastructure-postgres-1
     ports:
       - "5432:5432"
     environment:
@@ -49,8 +63,176 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ../sql/schema.sql:/docker-entrypoint-initdb.d/schema.sql
-  
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d traffic_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - traffic-net
 
+
+  # ═════════════════════════════════════════════════════════════════════
+  #  PROCESSING LAYER — Spark Master + Worker
+  #  (Used by spark_streaming.py to write to warehouse.fact_traffic)
+  # ═════════════════════════════════════════════════════════════════════
+
+  spark-master:
+    image: apache/spark:3.5.1
+    container_name: spark-master
+    ports:
+      - "8082:8080"   # Spark Master Web UI (8082 because 8080 is for Airflow)
+      - "7077:7077"   # Spark Master RPC port
+    command: bash -c "/opt/spark/sbin/start-master.sh && tail -f /opt/spark/logs/*"
+    volumes:
+      - ../streaming:/opt/spark/work
+    networks:
+      - traffic-net
+
+  spark-worker:
+    image: apache/spark:3.5.1
+    container_name: spark-worker
+    depends_on:
+      - spark-master
+    command: bash -c "/opt/spark/sbin/start-worker.sh spark://spark-master:7077 && tail -f /opt/spark/logs/*"
+    environment:
+      - SPARK_WORKER_MEMORY=2G
+      - SPARK_WORKER_CORES=2
+    networks:
+      - traffic-net
+
+
+  # ═════════════════════════════════════════════════════════════════════
+  #  ORCHESTRATION LAYER — Airflow
+  # ═════════════════════════════════════════════════════════════════════
+  #
+  # Airflow has its own Postgres (separate from traffic_db) for storing
+  # DAG run history, task states, etc. This is standard Airflow practice.
+  #
+  # The init service runs once to create Airflow's internal tables and
+  # the admin user, then exits. Webserver and scheduler depend on it.
+  # ─────────────────────────────────────────────────────────────────────
+
+  airflow-postgres:
+    image: postgres:13
+    container_name: airflow-postgres
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - airflow_postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"   # external 5433 to avoid clashing with traffic postgres
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 10s
+      retries: 5
+      start_period: 5s
+    networks:
+      - traffic-net
+
+  airflow-init:
+    image: apache/airflow:2.10.0
+    container_name: airflow-init
+    depends_on:
+      airflow-postgres:
+        condition: service_healthy
+    environment:
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-postgres:5432/airflow
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+      _AIRFLOW_DB_MIGRATE: 'true'
+      _AIRFLOW_WWW_USER_CREATE: 'true'
+      _AIRFLOW_WWW_USER_USERNAME: admin
+      _AIRFLOW_WWW_USER_PASSWORD: admin
+    command: version
+    networks:
+      - traffic-net
+
+  airflow-webserver:
+    image: apache/airflow:2.10.0
+    container_name: airflow-webserver
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+    environment:
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-postgres:5432/airflow
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+      AIRFLOW__WEBSERVER__SECRET_KEY: 'cairo-traffic-secret-change-in-prod'
+      # Connection details for the TRAFFIC database — DAGs use these
+      # Note: 'postgres' is the service name on traffic-net (no host.docker.internal needed!)
+      TRAFFIC_DB_HOST: postgres
+      TRAFFIC_DB_PORT: '5432'
+      TRAFFIC_DB_NAME: traffic_db
+      TRAFFIC_DB_USER: postgres
+      TRAFFIC_DB_PASSWORD: postgres
+    volumes:
+      - ../airflow/dags:/opt/airflow/dags
+      - ../airflow/logs:/opt/airflow/logs
+      - ../airflow/plugins:/opt/airflow/plugins
+      # Mount the project so DAGs can reach scripts and dbt
+      - ../:/opt/project:ro
+      # Mount exports folder writable so weekly export DAG can write here
+      - ../exports:/opt/project/exports
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    command: webserver
+    restart: always # change every 'always' to 'unless-stopped' to stop the service from running when docker open
+    networks:
+      - traffic-net
+
+  airflow-scheduler:
+    image: apache/airflow:2.10.0
+    container_name: airflow-scheduler
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+      airflow-webserver:
+        condition: service_healthy
+    environment:
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow-postgres:5432/airflow
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+      AIRFLOW__WEBSERVER__SECRET_KEY: 'cairo-traffic-secret-change-in-prod'
+      TRAFFIC_DB_HOST: postgres
+      TRAFFIC_DB_PORT: '5432'
+      TRAFFIC_DB_NAME: traffic_db
+      TRAFFIC_DB_USER: postgres
+      TRAFFIC_DB_PASSWORD: postgres
+    volumes:
+      - ../airflow/dags:/opt/airflow/dags
+      - ../airflow/logs:/opt/airflow/logs
+      - ../airflow/plugins:/opt/airflow/plugins
+      - ../:/opt/project:ro
+      - ../exports:/opt/project/exports
+    command: scheduler
+    restart: always
+    networks:
+      - traffic-net
+
+
+# ═════════════════════════════════════════════════════════════════════════
+#  PERSISTENT VOLUMES — survive container restarts
+# ═════════════════════════════════════════════════════════════════════════
 volumes:
-  postgres_data:
+  postgres_data:                # main traffic database
+  airflow_postgres_data:        # Airflow metadata
 
+
+# ═════════════════════════════════════════════════════════════════════════
+#  NETWORK — single shared network for all services
+#  All services use 'traffic-net' so they can find each other by name
+#  (e.g., DAGs reference 'postgres:5432' — no IP juggling needed)
+networks:
+  traffic-net:
+    driver: bridge

@@ -27,6 +27,17 @@ TOMTOM_BASE_URL = os.getenv(
     "https://api.tomtom.com/traffic/services/4/flowSegmentData/absolute/10/json",
 )
 
+# Weather API settings
+OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY")
+OPENWEATHER_BASE_URL = os.getenv(
+    "OPENWEATHER_BASE_URL",
+    "https://api.openweathermap.org/data/2.5/weather",
+)
+
+# Cairo center coords — one weather call per round covers the whole city
+CAIRO_LAT = 30.0444
+CAIRO_LON  = 31.2357
+
 # Set seconds to wait between each round of API calls
 POLL_INTERVAL = int(os.getenv("TOMTOM_REFRESH_INTERVAL", 60))
 
@@ -63,9 +74,9 @@ LOCATIONS = [
     {"name": "Nasr City Ring Road", "lat": 30.0626, "lon": 31.3417},
     {"name": "October Bridge", "lat": 30.0603, "lon": 31.2446},
     {"name": "El-Rawda St", "lat": 30.015822, "lon": 31.223920},
-    {"name": "Maadi Corniche", "lat": 29.9602, "lon": 31.2569},
+    {"name": "Maadi Corniche", "lat": 29.957459, "lon": 31.250348}, 
     {"name": "El-Gomhoreya St", "lat": 30.0499, "lon": 31.2466},
-    {"name": "El-Gaish St", "lat": 30.0523, "lon": 31.2542},
+    {"name": "El-Gaish St", "lat":30.052268, "lon": 31.254252},
     {"name": "Salah Salem Road", "lat": 30.0396, "lon": 31.2657},
     {"name": "Ramses St", "lat": 30.052613, "lon": 31.237925},
     {"name": "Talaat Harb St", "lat": 30.0506, "lon": 31.2404},
@@ -73,4 +84,46 @@ LOCATIONS = [
     {"name": "Nile Corniche", "lat": 30.047107, "lon": 31.231616},
     {"name": "26th of July Corridor", "lat": 30.063321, "lon": 31.167581},
     {"name": "Gamal Abd El-Nasser Rd", "lat": 30.051973, "lon": 31.216775},
+    {"name": "Shobra St", "lat": 30.092088,"lon":  31.245208},
+    {"name": "Abdulaziz Al Saud St", "lat": 30.023352, "lon": 31.223223},
+    {"name": "Al Manial St", "lat": 30.012794,"lon":  31.224867},
+    {"name": "Al Malik Al Mozafar St", "lat":30.014387,"lon": 31.223665},
+    {"name": "Amro Ibn Al Aas St", "lat":30.013521,"lon": 31.229385},
+    {"name": "Magra El-Eyoun St", "lat": 30.020851, "lon":  31.240715},
+    {"name": "Autostorad St", "lat": 29.997227,"lon": 31.278652 },
+    {"name": "El-Qobba Bridge", "lat": 30.100566,"lon":  31.305483},
+    {"name": "King Faisal St", "lat": 30.004008,"lon":  31.174183}, 
+    {"name": "Ring Road", "lat": 29.999456,"lon":  31.119034},
+    {"name": "Ahmed Oraby St", "lat": 30.062267,"lon": 31.212831},
 ]
+
+CAIRO_BBOX = "31.10,29.85,31.45,30.15"
+
+# TomTom Incidents API
+TOMTOM_INCIDENTS_URL = "https://api.tomtom.com/traffic/services/5/incidentDetails"
+
+# Incident icon category names (TomTom codes)
+INCIDENT_CATEGORIES = {
+    0: "Unknown",
+    1: "Accident",
+    2: "Fog",
+    3: "Dangerous Conditions",
+    4: "Rain",
+    5: "Ice",
+    6: "Jam",
+    7: "Lane Closed",
+    8: "Road Closed",
+    9: "Road Works",
+    10: "Wind",
+    11: "Flooding",
+    14: "Broken Down Vehicle",
+}
+
+# Delay magnitude names
+DELAY_MAGNITUDE = {
+    0: "Unknown",
+    1: "Minor",
+    2: "Moderate",
+    3: "Major",
+    4: "Undefined",
+}

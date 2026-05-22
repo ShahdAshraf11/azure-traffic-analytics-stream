@@ -1,0 +1,41 @@
+{
+  "rf_features": [
+    "current_speed",
+    "free_flow_speed",
+    "congestion_ratio",
+    "speed_drop_pct",
+    "delay_seconds",
+    "speed_deviation",
+    "hour",
+    "day_of_week",
+    "is_weekend",
+    "is_rush_hour",
+    "time_period",
+    "month",
+    "temperature",
+    "humidity",
+    "wind_speed",
+    "rain_mm",
+    "is_raining",
+    "frc_encoded",
+    "district_target_encoded",
+    "loc_avg_speed",
+    "loc_avg_congestion",
+    "is_slow_road",
+    "confidence"
+  ],
+  "if_features": [
+    "current_speed",
+    "free_flow_speed",
+    "congestion_ratio",
+    "speed_drop_pct",
+    "delay_seconds",
+    "speed_deviation",
+    "hour",
+    "is_rush_hour",
+    "rain_mm",
+    "wind_speed",
+    "loc_avg_speed",
+    "loc_avg_congestion"
+  ]
+}

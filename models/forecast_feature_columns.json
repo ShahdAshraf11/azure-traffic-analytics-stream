@@ -1,0 +1,48 @@
+{
+  "features": [
+    "current_speed",
+    "free_flow_speed",
+    "congestion_ratio",
+    "speed_drop_pct",
+    "delay_seconds",
+    "speed_lag_10min",
+    "speed_lag_30min",
+    "speed_lag_1hr",
+    "speed_lag_1day",
+    "ratio_lag_10min",
+    "ratio_lag_30min",
+    "ratio_lag_1hr",
+    "ratio_lag_1day",
+    "speed_trend_30min",
+    "ratio_trend_30min",
+    "congestion_buildup_1hr",
+    "buildup_acceleration",
+    "hour",
+    "day_of_week",
+    "is_weekend",
+    "is_rush_hour",
+    "month",
+    "temperature",
+    "humidity",
+    "wind_speed",
+    "rain_mm",
+    "is_raining",
+    "frc_encoded",
+    "district_encoded",
+    "requested_lat",
+    "requested_lon",
+    "confidence"
+  ],
+  "horizons": [
+    "20min",
+    "30min",
+    "60min"
+  ],
+  "classes": [
+    "Closed",
+    "Free Flow",
+    "Heavy",
+    "Moderate",
+    "Severe"
+  ]
+}

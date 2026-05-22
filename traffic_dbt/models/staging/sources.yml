@@ -1,0 +1,16 @@
+
+version: 2
+
+sources:
+  - name: warehouse
+    schema: warehouse
+    description: "Star schema data warehouse — filled by Spark ETL from HDFS data lake"
+    tables:
+      - name: fact_traffic
+        description: "One row per traffic reading with dimension keys"
+      - name: dim_location
+        description: "25 monitored Cairo roads with district and road class"
+      - name: dim_time
+        description: "168 hour×day combinations with rush hour and weekend flags"
+      - name: dim_weather
+        description: "12 weather condition categories"

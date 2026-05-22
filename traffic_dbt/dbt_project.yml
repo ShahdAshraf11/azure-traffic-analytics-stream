@@ -1,0 +1,29 @@
+
+name: 'traffic_dbt'
+version: '1.0.0'
+
+# Where dbt looks for different file types
+model-paths: ["models"]          # SQL transformation files
+analysis-paths: ["analyses"]     # Ad-hoc SQL queries
+test-paths: ["tests"]            # Data quality tests
+seed-paths: ["seeds"]            # CSV files to load as tables
+macro-paths: ["macros"]          # Reusable SQL functions
+snapshot-paths: ["snapshots"]    # Slowly changing dimension tracking
+
+# What to delete when running "dbt clean"
+clean-targets:
+  - "target"        # Compiled SQL output
+  - "dbt_packages"  # Downloaded packages
+
+# Which database profile to use (defined in profiles.yml)
+profile: 'traffic_dbt'
+
+# Default materialization for all models
+# "view" = creates a SQL view (no data stored, just a saved query)
+# "table" = creates an actual table (data is stored, faster to query)
+models:
+  traffic_dbt:
+    staging:
+      +materialized: view       # Staging models = views (lightweight)
+    marts:
+      +materialized: table      # Mart models = tables (Power BI reads these)
