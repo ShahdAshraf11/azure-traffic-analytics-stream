@@ -18,7 +18,7 @@ services:
       - zookeeper
     ports:
       - "9092:9092"   # internal — for Docker containers
-      - "9093:9093"   # external — for your Python script on host
+      - "9093:9093"   # external — for your Python script
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
