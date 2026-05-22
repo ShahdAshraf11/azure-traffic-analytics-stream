@@ -41,20 +41,23 @@ data/
 
 # ── API keys / configs ──
 api_config/
+profiles.yml
 
-PROJECT_DOCUMENTATION.md
-README.md
-traffic_eda_guide.md
-view_data.py
-bridge_validation_script.py
+# ── Data files ──
+*.csv
+raw_events_*.csv
 
+# ── Node.js Dashboard ──
+dashboard/server/node_modules/
+dashboard/client/node_modules/
+dashboard/client/build/
+dashboard/server/.env
+
+# ── Notebooks ──
 notebooks/
-.TomTom_Traffic_EDA_RealAPI (4).ipynb
+.ipynb_checkpoints/
 
-logs/
-docs/Proposal/Shahd Ashraf Zaki (shahdashraff896@gmail.com).pdf
-notebooks/TomTom_Traffic_EDA_RealAPI (4).ipynb
-Scripts/bridge_validation_script.py
-raw_events_202603281922.csv
-.pre-commit-config.yaml
-.gitignore
+# ── Optional personal/project docs ──
+docs/Proposal/
+PROJECT_DOCUMENTATION.md
+traffic_eda_guide.md
